@@ -40,6 +40,4 @@ public class User {
     @Column(name = "isactive")
     private String isactive;
 
-//    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "user")
-//    private List<Phone> listPhones;
 }
