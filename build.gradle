@@ -1,0 +1,65 @@
+plugins {
+	id 'org.springframework.boot' version '2.5.4'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java'
+	id 'jacoco'
+}
+
+jacoco {
+	toolVersion = "0.8.7" // Puedes especificar una versión diferente si lo deseas
+}
+
+// Configura Jacoco para el subproyecto principal
+project.tasks.withType(Test) {
+	finalizedBy jacocoTestReport // Asegura que las pruebas se ejecuten antes de generar el informe
+}
+
+jacocoTestReport {
+	reports {
+		xml.enabled true
+		html.enabled true
+	}
+
+	// Incluye las clases que se encuentran en el paquete 'com.example' (ajusta esto a tu estructura de paquetes)
+	dependsOn test // Asegura que se ejecuten las pruebas antes de generar el informe
+	classDirectories.from = fileTree(
+			dir: 'build/classes/java/main',
+			excludes: ['**/*Test*','com/business/user/model/**','com/business/user/entity/**','com/business/user/domain/**']
+	)
+
+	// Si usas Kotlin, también puedes configurar las clases de prueba
+	sourceDirectories.from = files('src/main/java')
+	executionData.from = files('build/jacoco/test.exec')
+}
+
+group = 'com.business'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
+	compileOnly 'org.projectlombok:lombok'
+	runtimeOnly 'com.h2database:h2'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'junit:junit:4.13'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.security:spring-security-test'
+}
+
+test {
+	useJUnitPlatform()
+}
