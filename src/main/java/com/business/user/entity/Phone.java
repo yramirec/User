@@ -28,8 +28,5 @@ public class Phone {
 
     @Column(name = "id_user")
     private String idUser;
-//
-//    @ManyToOne(optional = false, fetch = FetchType.EAGER)
-//    @JoinColumn(name = "id_user")
-//    private User user;
+
 }
